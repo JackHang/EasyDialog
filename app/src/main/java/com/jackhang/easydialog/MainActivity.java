@@ -1,26 +1,23 @@
 package com.jackhang.easydialog;
 
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jackhang.lib.EasyDialog;
 import com.jackhang.lib.IDialogResultListener;
 
-import java.util.TimerTask;
-
 public class MainActivity extends AppCompatActivity
 {
-	DialogFragment mDialogFragment;
+	private DialogFragment mDialogFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)

@@ -17,10 +17,6 @@ import android.view.View;
 
 public class EasyDialog
 {
-	public EasyDialog(){
-
-	}
-
 	private CustomDialogFragment Show(final Builder builder)
 	{
 		CustomDialogFragment dialogFragment = CustomDialogFragment.newInstance(new CustomDialogFragment.OnCallDialog()
