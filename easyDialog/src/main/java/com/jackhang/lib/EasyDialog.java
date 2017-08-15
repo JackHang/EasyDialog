@@ -21,53 +21,30 @@ public class EasyDialog
 
 	}
 
-	private void customShow(final Builder builder)
+	private void Show(final Builder builder)
 	{
 		CustomDialogFragment dialogFragment = CustomDialogFragment.newInstance(new CustomDialogFragment.OnCallDialog()
 		{
 			@Override
 			public Dialog getDialog(Context context)
 			{
-				Dialog mDialog = new Dialog(context);
-				mDialog.setContentView(builder.contentView);
-				return mDialog;
+				return buildDialog(context,builder);
 			}
 		}, builder.cancelable, builder.mCancelListener);
 		dialogFragment.show(builder.mFragmentManager,builder.TAG);
 	}
 
-	private void progressShow(final Builder builder)
-	{
-		CustomDialogFragment dialogFragment = CustomDialogFragment.newInstance(new CustomDialogFragment.OnCallDialog()
-		{
-			@Override
-			public Dialog getDialog(Context context)
-			{
-				ProgressDialog progressDialog;
-				if(builder.THEME != 0)
-					progressDialog = new ProgressDialog(context,builder.THEME);
-				else
-					progressDialog = new ProgressDialog(context);
-				progressDialog.setMessage(builder.message);
-				return progressDialog;
-			}
-		}, builder.cancelable,builder.mCancelListener);
-		dialogFragment.show(builder.mFragmentManager,builder.TAG);
-	}
-
 	@SuppressWarnings("unchecked")
-	private void baseShow(final Builder builder)
+	private Dialog buildDialog(Context context, final Builder builder)
 	{
-		CustomDialogFragment dialogFragment = CustomDialogFragment.newInstance(new CustomDialogFragment.OnCallDialog()
+		switch (builder.TYPE)
 		{
-			@Override
-			public Dialog getDialog(Context context)
-			{
+			case Global.BASE:
 				AlertDialog.Builder dialog;
 				if(builder.THEME != 0)
 					dialog = new AlertDialog.Builder(context, builder.THEME);
 				else
-					dialog = new AlertDialog.Builder(context, builder.THEME);
+					dialog = new AlertDialog.Builder(context);
 				dialog.setMessage(builder.message);
 				dialog.setPositiveButton(builder.positive, new DialogInterface.OnClickListener() {
 					@Override
@@ -96,9 +73,21 @@ public class EasyDialog
 					}
 				});
 				return dialog.create();
-			}
-		}, builder.cancelable, builder.mCancelListener);
-		dialogFragment.show(builder.mFragmentManager,builder.TAG);
+			case Global.PROGRESS:
+				ProgressDialog progressDialog;
+				if(builder.THEME != 0)
+					progressDialog = new ProgressDialog(context,builder.THEME);
+				else
+					progressDialog = new ProgressDialog(context);
+				progressDialog.setMessage(builder.message);
+				return progressDialog;
+			case Global.CUSTOM:
+				Dialog mDialog = new Dialog(context);
+				mDialog.setContentView(builder.contentView);
+				return mDialog;
+			default:
+				return null;
+		}
 	}
 
 	public static class Builder
@@ -115,6 +104,8 @@ public class EasyDialog
 		private View contentView;
 		private IDialogResultListener mListener;
 		private CustomDialogFragment.OnDialogCancelListener mCancelListener;
+
+		private int TYPE;
 
 		public Builder()
 		{
@@ -201,8 +192,9 @@ public class EasyDialog
 			{
 				throw new IllegalStateException("FragmentManager/contentView is null");
 			}
+			this.TYPE = Global.CUSTOM;
 			EasyDialog easyDialog = new EasyDialog();
-			easyDialog.customShow(this);
+			easyDialog.Show(this);
 		}
 
 		public void progressBuild()
@@ -211,8 +203,9 @@ public class EasyDialog
 			{
 				throw new IllegalStateException("FragmentManager is null");
 			}
+			this.TYPE = Global.PROGRESS;
 			EasyDialog easyDialog = new EasyDialog();
-			easyDialog.progressShow(this);
+			easyDialog.Show(this);
 		}
 
 		public void baseBuild()
@@ -221,8 +214,9 @@ public class EasyDialog
 			{
 				throw new IllegalStateException("FragmentManager is null");
 			}
+			this.TYPE = Global.BASE;
 			EasyDialog easyDialog = new EasyDialog();
-			easyDialog.baseShow(this);
+			easyDialog.Show(this);
 		}
 	}
 }
