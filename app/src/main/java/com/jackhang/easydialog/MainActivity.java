@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity
 									case DialogInterface.BUTTON_NEUTRAL:
 										Toast.makeText(MainActivity.this, "click NEUTRAL", Toast.LENGTH_SHORT).show();
 										break;
+									default:break;
 								}
 							}
 						})

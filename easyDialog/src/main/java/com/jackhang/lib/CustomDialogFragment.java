@@ -61,11 +61,9 @@ public class CustomDialogFragment extends DialogFragment
 		Dialog dialog = getDialog();
 		if (dialog != null) {
 			// 在 5.0 以下的版本会出现白色背景边框，若在 5.0 以上设置则会造成文字部分的背景也变成透明
-			if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+			if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && (dialog instanceof ProgressDialog || dialog instanceof DatePickerDialog)) {
 				// 目前只有这两个 dialog 会出现边框
-				if (dialog instanceof ProgressDialog || dialog instanceof DatePickerDialog) {
-					getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-				}
+				getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 			}
 			Window window = getDialog().getWindow();
 			WindowManager.LayoutParams windowParams = window.getAttributes();
