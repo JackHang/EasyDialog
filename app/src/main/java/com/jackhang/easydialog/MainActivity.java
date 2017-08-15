@@ -1,6 +1,8 @@
 package com.jackhang.easydialog;
 
 import android.content.DialogInterface;
+import android.os.Handler;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,8 +16,12 @@ import android.widget.Toast;
 import com.jackhang.lib.EasyDialog;
 import com.jackhang.lib.IDialogResultListener;
 
+import java.util.TimerTask;
+
 public class MainActivity extends AppCompatActivity
 {
+	DialogFragment mDialogFragment;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -37,9 +43,10 @@ public class MainActivity extends AppCompatActivity
 			case R.id.showConfirmDialog:
 				new EasyDialog.Builder()
 						.setFragmentManager(getSupportFragmentManager())
-						.setMessage("")
+						.setMessage("ConfirmDialog")
 						.setNegative("No")
 						.setPositive("Yes")
+						.setNeutral("Neutral")
 						.setListener(new IDialogResultListener<Integer>()
 						{
 							@Override
@@ -60,7 +67,7 @@ public class MainActivity extends AppCompatActivity
 								}
 							}
 						})
-						.baseBuild();
+						.alterBuild();
 				break;
 
 			case R.id.showDateDialog:
@@ -79,25 +86,31 @@ public class MainActivity extends AppCompatActivity
 				break;
 
 			case R.id.showProgress:
-				new EasyDialog.Builder()
+				mDialogFragment = new EasyDialog.Builder()
 						.setFragmentManager(getSupportFragmentManager())
 						.setMessage("正在加载中")
 						.setTitle("Test")
 						.setCancelable(true)
 						.progressBuild();
+				Handler handler=new Handler();
+				Runnable runnable=new Runnable() {
+					@Override
+					public void run() {
+						mDialogFragment.dismiss();
+					}
+				};
+				handler.postDelayed(runnable, 2000);
 				break;
-
 			case R.id.showTimeDialog:
 				break;
 
 			case R.id.showTips:
-				TextView text = new TextView(this);
-				text.setText("你进入了无网的异次元中");
 				new EasyDialog.Builder()
 						.setFragmentManager(getSupportFragmentManager())
 						.setCancelable(true)
-						.setContentView(text)
-						.customBuild();
+						.setMessage("你进入了无网的异次元中")
+						.setTitle("Tips")
+						.alterBuild();
 				break;
 
 			case R.id.customDialog:

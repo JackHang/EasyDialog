@@ -17,11 +17,11 @@ import android.view.View;
 
 public class EasyDialog
 {
-	private EasyDialog(){
+	public EasyDialog(){
 
 	}
 
-	private void Show(final Builder builder)
+	private CustomDialogFragment Show(final Builder builder)
 	{
 		CustomDialogFragment dialogFragment = CustomDialogFragment.newInstance(new CustomDialogFragment.OnCallDialog()
 		{
@@ -32,6 +32,7 @@ public class EasyDialog
 			}
 		}, builder.cancelable, builder.mCancelListener);
 		dialogFragment.show(builder.mFragmentManager,builder.TAG);
+		return dialogFragment;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -39,40 +40,6 @@ public class EasyDialog
 	{
 		switch (builder.TYPE)
 		{
-			case Global.BASE:
-				AlertDialog.Builder dialog;
-				if(builder.THEME != 0)
-					dialog = new AlertDialog.Builder(context, builder.THEME);
-				else
-					dialog = new AlertDialog.Builder(context);
-				dialog.setMessage(builder.message);
-				dialog.setPositiveButton(builder.positive, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						if(builder.mListener != null){
-							builder.mListener.onDataResult(which,which);
-						}
-					}
-				});
-				dialog.setNegativeButton(builder.negative, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						if(builder.mListener != null){
-							builder.mListener.onDataResult(which,which);
-						}
-					}
-				});
-				dialog.setNeutralButton(builder.neutral, new DialogInterface.OnClickListener()
-				{
-					@Override
-					public void onClick(DialogInterface dialog, int which)
-					{
-						if(builder.mListener != null){
-							builder.mListener.onDataResult(which,which);
-						}
-					}
-				});
-				return dialog.create();
 			case Global.PROGRESS:
 				ProgressDialog progressDialog;
 				if(builder.THEME != 0)
@@ -85,6 +52,41 @@ public class EasyDialog
 				Dialog mDialog = new Dialog(context);
 				mDialog.setContentView(builder.contentView);
 				return mDialog;
+			case Global.ALTER:
+				AlertDialog.Builder alter;
+				if(builder.THEME != 0)
+					alter = new AlertDialog.Builder(context, builder.THEME);
+				else
+					alter = new AlertDialog.Builder(context);
+				alter.setTitle(builder.title);
+				alter.setMessage(builder.message);
+				alter.setPositiveButton(builder.positive, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						if(builder.mListener != null){
+							builder.mListener.onDataResult(which,which);
+						}
+					}
+				});
+				alter.setNegativeButton(builder.negative, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						if(builder.mListener != null){
+							builder.mListener.onDataResult(which,which);
+						}
+					}
+				});
+				alter.setNeutralButton(builder.neutral, new DialogInterface.OnClickListener()
+				{
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						if(builder.mListener != null){
+							builder.mListener.onDataResult(which,which);
+						}
+					}
+				});
+				return alter.create();
 			default:
 				return null;
 		}
@@ -197,7 +199,7 @@ public class EasyDialog
 			easyDialog.Show(this);
 		}
 
-		public void progressBuild()
+		public CustomDialogFragment progressBuild()
 		{
 			if(this.mFragmentManager == null)
 			{
@@ -205,16 +207,16 @@ public class EasyDialog
 			}
 			this.TYPE = Global.PROGRESS;
 			EasyDialog easyDialog = new EasyDialog();
-			easyDialog.Show(this);
+			return easyDialog.Show(this);
 		}
 
-		public void baseBuild()
+		public void alterBuild()
 		{
 			if(this.mFragmentManager == null)
 			{
 				throw new IllegalStateException("FragmentManager is null");
 			}
-			this.TYPE = Global.BASE;
+			this.TYPE = Global.ALTER;
 			EasyDialog easyDialog = new EasyDialog();
 			easyDialog.Show(this);
 		}
