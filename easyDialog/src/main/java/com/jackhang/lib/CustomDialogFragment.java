@@ -30,6 +30,8 @@ public class CustomDialogFragment extends DialogFragment
 	 */
 	private OnCallDialog mOnCallDialog;
 
+	private boolean isTransparent;
+
 	public interface OnDialogCancelListener {
 		void onCancel();
 	}
@@ -38,11 +40,13 @@ public class CustomDialogFragment extends DialogFragment
 		Dialog getDialog(Context context);
 	}
 
-	public static CustomDialogFragment newInstance(OnCallDialog callDialog, boolean cancelable, OnDialogCancelListener cancelListener) {
+	public static CustomDialogFragment newInstance(OnCallDialog callDialog, boolean cancelable, boolean isTransparent, OnDialogCancelListener cancelListener)
+	{
 		CustomDialogFragment instance = new CustomDialogFragment();
 		instance.setCancelable(cancelable);
 		instance.mCancelListener = cancelListener;
 		instance.mOnCallDialog = callDialog;
+		instance.isTransparent = isTransparent;
 		return instance;
 	}
 
@@ -59,11 +63,14 @@ public class CustomDialogFragment extends DialogFragment
 	public void onStart() {
 		super.onStart();
 		Dialog dialog = getDialog();
-		if (dialog != null) {
+		if (dialog != null && isTransparent)
+		{
 			// 在 5.0 以下的版本会出现白色背景边框，若在 5.0 以上设置则会造成文字部分的背景也变成透明
-			if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && (dialog instanceof ProgressDialog || dialog instanceof DatePickerDialog)) {
+			if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT && (dialog instanceof ProgressDialog || dialog
+					instanceof DatePickerDialog))
+			{
 				// 目前只有这两个 dialog 会出现边框
-				getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+				dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 			}
 			Window window = getDialog().getWindow();
 			WindowManager.LayoutParams windowParams = window.getAttributes();
