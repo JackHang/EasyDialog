@@ -15,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 /**
  * Created by JackHang on 2017/8/11.
  */
@@ -70,6 +72,7 @@ public class EasyDialog
 				return mDialog;
 			case Global.ALTER:
 			case Global.ALTER_CUSTOM:
+			case Global.ALTER_LIST:
 				AlertDialog.Builder alter;
 				if (builder.THEME != 0)
 				{
@@ -82,9 +85,22 @@ public class EasyDialog
 				if (builder.TYPE == Global.ALTER)
 				{
 					alter.setMessage(builder.message);
-				} else
+				} else if (builder.TYPE == Global.ALTER_CUSTOM)
 				{
 					alter.setView(builder.contentView);
+				} else
+				{
+					alter.setItems(builder.items.toArray(new String[builder.items.size()]), new DialogInterface.OnClickListener()
+					{
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							if (builder.mListener != null)
+							{
+								builder.mListener.onDataResult(builder.items.get(which));
+							}
+						}
+					});
 				}
 				alter.setPositiveButton(builder.positive, new DialogInterface.OnClickListener()
 				{
@@ -120,6 +136,8 @@ public class EasyDialog
 					}
 				});
 				return alter.create();
+			case Global.CUSTOM_DIALOG:
+				return builder.coustomDialog;
 			default:
 				return null;
 		}
@@ -135,9 +153,11 @@ public class EasyDialog
 		private String negative;
 		private String neutral;
 		private String title;
-		private int THEME;
 		private String TAG;
+		private ArrayList<String> items;
+		private int THEME;
 		private View contentView;
+		private Dialog coustomDialog;
 		@DrawableRes
 		private int dialogBackground;
 		private IDialogResultListener mListener;
@@ -225,6 +245,33 @@ public class EasyDialog
 			return this;
 		}
 
+		public Builder Item(String item)
+		{
+			if (items == null)
+			{
+				items = new ArrayList<>();
+			}
+
+			items.add(item);
+			return this;
+		}
+
+		public Builder Items(ArrayList<String> items)
+		{
+			if (this.items == null)
+			{
+				this.items = new ArrayList<>();
+			}
+			this.items.addAll(items);
+			return this;
+		}
+
+		public Builder setCoustomDialog(Dialog coustomDialog)
+		{
+			this.coustomDialog = coustomDialog;
+			return this;
+		}
+
 		@SuppressWarnings("unchecked")
 		public <T extends View> T getView(@IdRes int viewId)
 		{
@@ -255,9 +302,9 @@ public class EasyDialog
 
 		public void customBuild()
 		{
-			if (this.mFragmentManager == null && this.contentView == null)
+			if (this.contentView == null)
 			{
-				throw new IllegalStateException("FragmentManager/contentView is null");
+				throw new IllegalStateException("contentView is null");
 			}
 			this.TYPE = Global.CUSTOM;
 			EasyDialog easyDialog = new EasyDialog();
@@ -266,10 +313,6 @@ public class EasyDialog
 
 		public CustomDialogFragment progressBuild()
 		{
-			if (this.mFragmentManager == null)
-			{
-				throw new IllegalStateException("FragmentManager is null");
-			}
 			this.TYPE = Global.PROGRESS;
 			EasyDialog easyDialog = new EasyDialog();
 			return easyDialog.Show(this);
@@ -277,10 +320,6 @@ public class EasyDialog
 
 		public void alterBuild()
 		{
-			if (this.mFragmentManager == null)
-			{
-				throw new IllegalStateException("FragmentManager is null");
-			}
 			this.TYPE = Global.ALTER;
 			EasyDialog easyDialog = new EasyDialog();
 			easyDialog.Show(this);
@@ -288,11 +327,29 @@ public class EasyDialog
 
 		public void alterCustomBuild()
 		{
-			if (this.mFragmentManager == null)
-			{
-				throw new IllegalStateException("FragmentManager is null");
-			}
 			this.TYPE = Global.ALTER_CUSTOM;
+			EasyDialog easyDialog = new EasyDialog();
+			easyDialog.Show(this);
+		}
+
+		public void alterListBuild()
+		{
+			if (this.items == null)
+			{
+				throw new IllegalStateException("Items is null");
+			}
+			this.TYPE = Global.ALTER_LIST;
+			EasyDialog easyDialog = new EasyDialog();
+			easyDialog.Show(this);
+		}
+
+		public void customDialogBuild()
+		{
+			if (this.coustomDialog == null)
+			{
+				throw new IllegalStateException("CustomDialog is null");
+			}
+			this.TYPE = Global.CUSTOM_DIALOG;
 			EasyDialog easyDialog = new EasyDialog();
 			easyDialog.Show(this);
 		}

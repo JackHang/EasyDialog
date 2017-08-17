@@ -7,4 +7,6 @@ package com.jackhang.lib;
 public interface IDialogResultListener
 {
     void onDataResult(int which);
+
+	void onDataResult(String what);
 }
