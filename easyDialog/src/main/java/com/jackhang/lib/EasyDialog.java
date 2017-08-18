@@ -137,7 +137,7 @@ public class EasyDialog
 				});
 				return alter.create();
 			case Global.CUSTOM_DIALOG:
-				return builder.coustomDialog;
+				return builder.customDialog;
 			default:
 				return null;
 		}
@@ -157,7 +157,7 @@ public class EasyDialog
 		private ArrayList<String> items;
 		private int THEME;
 		private View contentView;
-		private Dialog coustomDialog;
+		private Dialog customDialog;
 		@DrawableRes
 		private int dialogBackground;
 		private IDialogResultListener mListener;
@@ -266,9 +266,9 @@ public class EasyDialog
 			return this;
 		}
 
-		public Builder setCoustomDialog(Dialog coustomDialog)
+		public Builder setCustomDialog(Dialog customDialog)
 		{
-			this.coustomDialog = coustomDialog;
+			this.customDialog = customDialog;
 			return this;
 		}
 
@@ -345,7 +345,7 @@ public class EasyDialog
 
 		public void customDialogBuild()
 		{
-			if (this.coustomDialog == null)
+			if (this.customDialog == null)
 			{
 				throw new IllegalStateException("CustomDialog is null");
 			}

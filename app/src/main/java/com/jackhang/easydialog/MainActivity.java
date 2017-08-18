@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements IDialogResultList
 					}
 				});
 				new EasyDialog.Builder(getSupportFragmentManager())
-						.setCoustomDialog(datePickerDialog)
+						.setCustomDialog(datePickerDialog)
 						.customDialogBuild();
 				break;
 
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements IDialogResultList
 					}
 				});
 				new EasyDialog.Builder(getSupportFragmentManager())
-						.setCoustomDialog(dateDialog)
+						.setCustomDialog(dateDialog)
 						.customDialogBuild();
 				break;
 
@@ -168,6 +168,8 @@ public class MainActivity extends AppCompatActivity implements IDialogResultList
 				.setTHEME(THEME)
 				.setCancelable(true)
 				.Items(strings)
+				.setNegative("No")
+				.setPositive("Yes")
 				.setListener(this)
 				.setTitle("Tips")
 				.alterListBuild();
